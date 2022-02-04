@@ -1,2 +1,4 @@
+import sys
+
 if __name__ == '__main__':
-    exit(0)
+    sys.exit(0)
