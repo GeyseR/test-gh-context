@@ -15,6 +15,19 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.10'
+
+      - name: Extract branch name
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Find last successful commit
+        uses: nrwl/last-successful-commit-action@v1
+        id: last_successful_commit
+        with:
+          branch: ${{ steps.extract_branch.outputs.branch }}
+          workflow_id: test-context.yaml
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Dump GitHub context
         env:
           GITHUB_ACTIONS_CONTEXT: ${{ tojson(github) }}
