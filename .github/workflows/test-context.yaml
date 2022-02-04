@@ -9,27 +9,27 @@ on:
       - v*
 
 jobs:
+  determine-type:
+    runs-on: ubuntu-latest
+    outputs:
+      type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.test || steps.if-pr.outputs.test }}
+    steps:
+      - id: if-staging
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: echo "::set-output name=type::STAGING"
+      - id: if-prod
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: echo "::set-output name=type::PROD"
+      - id: if-pr
+        if: ${{ env.GITHUB_EVENT_NAME == 'pull_request' }}
+        run: echo "::set-output name=test::PR"
+
   test-context:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
-
-      - name: Extract branch name
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Find last successful commit
-        uses: nrwl/last-successful-commit-action@v1
-        id: last_successful_commit
-        with:
-          branch: ${{ steps.extract_branch.outputs.branch }}
-          workflow_id: test-context.yaml
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Dump GitHub context
+      - name: echo type of build
         env:
-          GITHUB_ACTIONS_CONTEXT: ${{ tojson(github) }}
+          MESSAGE: ${{ needs.determine-type.outputs.type }} - START
         run: |
-          python ./run.py
+          echo "$GITHUB_ACTIONS_COMMITS"
+
