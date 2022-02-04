@@ -12,7 +12,7 @@ jobs:
   determine-type:
     runs-on: ubuntu-latest
     outputs:
-      type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.test || steps.if-pr.outputs.test }}
+      type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.type || steps.if-pr.outputs.type }}
     steps:
       - id: if-staging
         if: ${{ github.ref == 'refs/heads/master' }}
@@ -23,7 +23,6 @@ jobs:
       - id: if-pr
         if: ${{ env.GITHUB_EVENT_NAME == 'pull_request' }}
         run: echo "::set-output name=test::PR"
-
 
   test-context:
     runs-on: ubuntu-latest
