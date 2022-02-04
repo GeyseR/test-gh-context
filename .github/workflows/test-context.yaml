@@ -32,4 +32,5 @@ jobs:
           MESSAGE: ${{ needs.determine-type.outputs.type }} - START
         run: |
           echo "$MESSAGE"
+          echo ${{ needs.determine-type.outputs.type }} - START
 
