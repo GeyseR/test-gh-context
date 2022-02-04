@@ -31,5 +31,5 @@ jobs:
         env:
           MESSAGE: ${{ needs.determine-type.outputs.type }} - START
         run: |
-          echo "$GITHUB_ACTIONS_COMMITS"
+          echo "$MESSAGE"
 
