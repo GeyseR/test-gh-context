@@ -9,7 +9,7 @@ on:
       - v*
 
 jobs:
-  determine-type:
+  action-type:
     runs-on: ubuntu-latest
     outputs:
       type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.type || steps.if-pr.outputs.type }}
@@ -22,16 +22,16 @@ jobs:
         run: echo "::set-output name=type::PROD"
       - id: if-pr
         if: ${{ github.event_name == 'pull_request' }}
-        run: echo "::set-output name=type::PR"
+        run: echo "::set-output name=type::PR - ${{ github.ref_name }}"
 
   test-context:
     runs-on: ubuntu-latest
-    needs: determine-type
+    needs: action-type
     steps:
       - name: echo type of build
         env:
-          MESSAGE: ${{ needs.determine-type.outputs.type }} - START
+          MESSAGE: ${{ needs.action-type.outputs.type }} - START
         run: |
           echo "$MESSAGE"
-          echo ${{ needs.determine-type.outputs.type }} - START
+          echo ${{ needs.action-type.outputs.type }} - START
 
