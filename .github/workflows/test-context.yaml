@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Dump GitHub context
         env:
-          GITHUB_ACTIONS_COMMITS: ${{ tojson(github.event.commits) }}
-          GITHUB_ACTIONS_EVENT: ${{ github.event_name }}
+          GITHUB_ACTIONS_CONTEXT: ${{ tojson(github) }}
         run: |
-          echo "$GITHUB_ACTIONS_COMMITS"
-          echo "$GITHUB_ACTIONS_EVENT"
+          echo "GITHUB_ACTIONS_CONTEXT"
