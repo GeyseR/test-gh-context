@@ -14,6 +14,8 @@ jobs:
     outputs:
       type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.type || steps.if-pr.outputs.type }}
     steps:
+      - run: |
+          echo: "${GITHUB_EVENT_NAME}"
       - id: if-staging
         if: ${{ github.ref == 'refs/heads/master' }}
         run: echo "::set-output name=type::STAGING"
