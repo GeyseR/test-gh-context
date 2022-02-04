@@ -9,29 +9,23 @@ on:
       - v*
 
 jobs:
-  action-type:
-    runs-on: ubuntu-latest
-    outputs:
-      type: ${{ steps.if-staging.outputs.type || steps.if-prod.outputs.type || steps.if-pr.outputs.type }}
-    steps:
-      - id: if-staging
-        if: ${{ github.ref == 'refs/heads/master' }}
-        run: echo "::set-output name=type::STAGING"
-      - id: if-prod
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        run: echo "::set-output name=type::PROD"
-      - id: if-pr
-        if: ${{ github.event_name == 'pull_request' }}
-        run: echo "::set-output name=type::PR - ${{ github.head_ref }}"
-
   test-context:
     runs-on: ubuntu-latest
-    needs: action-type
     steps:
-      - name: echo type of build
-        env:
-          MESSAGE: ${{ needs.action-type.outputs.type }} - START
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      - name: Check status
+        id: status
         run: |
-          echo "$MESSAGE"
-          echo ${{ needs.action-type.outputs.type }} - START
-
+          if ./run.py; then
+            echo "::set-output name=result::true"
+          else
+            echo "::set-output name=result::false"
+          fi
+      - if: steps.status.outputs.result == 'true'
+        name: Check1
+        run: echo "success"
+      - if: steps.status.outputs.result == 'false'
+        name: Check2
+        run: echo "failed"
