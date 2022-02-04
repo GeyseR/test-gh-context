@@ -22,7 +22,7 @@ jobs:
         run: echo "::set-output name=type::PROD"
       - id: if-pr
         if: ${{ github.event_name == 'pull_request' }}
-        run: echo "::set-output name=type::PR - ${{ github.ref_name }}"
+        run: echo "::set-output name=type::PR - ${{ github.head_ref }}"
 
   test-context:
     runs-on: ubuntu-latest
