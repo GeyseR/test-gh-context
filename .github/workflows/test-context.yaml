@@ -19,7 +19,7 @@ jobs:
       - name: Check status
         id: status
         run: |
-          if ./run.py; then
+          if python ./run.py; then
             echo "::set-output name=result::true"
           else
             echo "::set-output name=result::false"
