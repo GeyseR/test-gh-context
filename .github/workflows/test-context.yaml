@@ -1,0 +1,19 @@
+name: Test and deploy
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+
+jobs:
+  test-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_ACTIONS_COMMITS: ${{ tojson(github.event.commits) }}
+        run: |
+          echo "$GITHUB_ACTIONS_COMMITS"
