@@ -24,6 +24,7 @@ jobs:
         if: ${{ env.GITHUB_EVENT_NAME == 'pull_request' }}
         run: echo "::set-output name=test::PR"
 
+
   test-context:
     runs-on: ubuntu-latest
     needs: determine-type
